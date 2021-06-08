@@ -1,0 +1,16 @@
+<div class="nav-header-wrapper" fxLayout="column">
+  <div class="header-bar" fxLayoutAlign="start center" fxLayout="row">
+    <mat-icon>build_circle</mat-icon>
+    <div style="margin-left: 10px;">Title Test</div>
+  </div>
+  <div class="nav-bar" fxLayout="row">
+    <div *ngFor="let item of items">
+      <div class="entry-wrapper" (click)="onClick(item.path)" fxLayoutAlign="center center">
+        <div fxLayout="row">
+          <mat-icon *ngIf="item.icon">{{item.icon}}</mat-icon>
+          {{ item.label }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
