@@ -5,6 +5,11 @@ export enum TTTCellState {
   EMPTY, X, O
 }
 
+interface Turn {
+  x: number;
+  y: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,7 +17,10 @@ export class GameLogicService {
   private subState: Subject<TTTCellState[]>;
   private subTurn: Subject<boolean>;
 
+  private lastPlayerTurn: Turn | null = null;
+
   private playerColor: TTTCellState;
+  private opponentColor: TTTCellState;
   private playerTurn = false;
   private gameState: TTTCellState[] = [
     TTTCellState.EMPTY,
@@ -27,10 +35,31 @@ export class GameLogicService {
   ];
 
   constructor() {
-    this.playerTurn = true; //TODO: Entfernen!
+    this.playerTurn = true; // TODO: Entfernen!
     this.playerColor = TTTCellState.X;
+    this.opponentColor = TTTCellState.O;
     this.subState = new Subject<TTTCellState[]>();
     this.subTurn = new Subject<boolean>();
+  }
+
+  newMatch(): void {
+    // Reset everything
+    this.playerTurn = false;
+    this.gameState = [
+      TTTCellState.EMPTY,
+      TTTCellState.EMPTY,
+      TTTCellState.EMPTY,
+      TTTCellState.EMPTY,
+      TTTCellState.EMPTY,
+      TTTCellState.EMPTY,
+      TTTCellState.EMPTY,
+      TTTCellState.EMPTY,
+      TTTCellState.EMPTY,
+    ];
+    this.notifyStateChange();
+    this.notifyTurnChange();
+
+
   }
 
   playTurn(x: number, y: number): void {
@@ -38,8 +67,8 @@ export class GameLogicService {
       if (this.setCell(x, y, this.playerColor)) {
         this.playerTurn = false;
         this.notifyTurnChange();
-
       }
+      this.notifyStateChange();
     }
   }
 
@@ -71,5 +100,18 @@ export class GameLogicService {
 
   private notifyTurnChange(): void {
     this.subTurn.next(this.playerTurn);
+  }
+
+  private handlerOpponentTurn(): void {
+
+  }
+  private handlerTurnRollback(): void {
+
+  }
+  private handlerMatchStart(): void {
+
+  }
+  private handlerMatchEnd(): void {
+
   }
 }

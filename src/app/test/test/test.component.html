@@ -1,0 +1,15 @@
+<div fxLayout="column" style="padding: 10px;">
+    <div fxLayout="row" style="margin-bottom: 20px;">
+        <input type="text" [formControl]="inputURL"/>
+        <button style="margin-left: 20px;">Init</button>
+        <div style="margin-left: 20px;">Connection: </div>
+    </div>
+    <div style="margin-bottom: 20px;">
+        <input type="text" [formControl]="inputMsg"/>
+        <button style="margin-left: 20px;">Send</button>
+    </div>
+    <div style="height: 200px; overflow-y: scroll;">
+        <div>Received:</div>
+        <div *ngFor="let msg of rcvMsgs">{{msg}}</div>
+    </div>
+</div>

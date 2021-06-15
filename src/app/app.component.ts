@@ -19,6 +19,10 @@ export class AppComponent {
         label: 'Overview',
         path: 'overview'
       },
-    ])
+      {
+        label: 'Test',
+        path: 'test'
+      }
+    ]);
   }
 }

@@ -8,6 +8,7 @@ import { GameLogicService, TTTCellState } from '../../services/game-logic.servic
 })
 export class TTTFieldComponent implements OnInit {
   @ViewChild('tttCanvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
+  private eventTimer = 0;
 
   constructor(private gameLogic: GameLogicService) { }
 
@@ -18,29 +19,31 @@ export class TTTFieldComponent implements OnInit {
   }
 
   click(event: any): void {
-    const clientX = event.clientX;
-    const clientY = event.clientY;
+    if (this.eventTimer > new Date().getTime() - 1000) { // Limit incoming events to once every second
+      this.eventTimer = new Date().getTime();
+      const clientX = event.clientX;
+      const clientY = event.clientY;
 
-    if (this.canvas != undefined) {
-      const canvasTop = this.canvas.nativeElement.getBoundingClientRect().top;
-      const canvasLeft = this.canvas.nativeElement.getBoundingClientRect().left;
-      const canvasWidth = this.canvas.nativeElement.getBoundingClientRect().width;
-      const canvasHeight = this.canvas.nativeElement.getBoundingClientRect().height;
+      if (this.canvas != undefined) {
+        const canvasTop = this.canvas.nativeElement.getBoundingClientRect().top;
+        const canvasLeft = this.canvas.nativeElement.getBoundingClientRect().left;
+        const canvasWidth = this.canvas.nativeElement.getBoundingClientRect().width;
+        const canvasHeight = this.canvas.nativeElement.getBoundingClientRect().height;
 
-      const cellWidth = canvasWidth / 3;
-      const cellHeight = canvasHeight / 3;
+        const cellWidth = canvasWidth / 3;
+        const cellHeight = canvasHeight / 3;
 
-      for (let y = 0; y < 3; y++) {
-        for (let x = 0; x < 3; x++) {
-          if (clientX >= (canvasLeft + (cellWidth * x)) && clientX < (canvasLeft + (cellWidth * (x + 1))) &&
-          clientY >= (canvasTop + (cellHeight * y)) && clientY < (canvasTop + (cellHeight * (y + 1)))) {
-            this.gameLogic.playTurn(x, y);
+        for (let y = 0; y < 3; y++) {
+          for (let x = 0; x < 3; x++) {
+            if (clientX >= (canvasLeft + (cellWidth * x)) && clientX < (canvasLeft + (cellWidth * (x + 1))) &&
+            clientY >= (canvasTop + (cellHeight * y)) && clientY < (canvasTop + (cellHeight * (y + 1)))) {
+              this.gameLogic.playTurn(x, y);
+            }
           }
         }
       }
+      this.drawMarkings();
     }
-
-    this.drawMarkings();
   }
 
   private clearCanvas(): void {
