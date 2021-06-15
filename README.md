@@ -1,6 +1,6 @@
-# DistributedTtt
+# DistributedTTT
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.11.
+Angular Frontend for a university project that implements a game of online tic-tac-toe that uses a cloud backend
 
 ## Development server
 
