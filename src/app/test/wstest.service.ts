@@ -16,11 +16,13 @@ export class WstestService {
   connect(url: string): void {
     if (this.connection != undefined) {
       this.connection.complete();
+      this.subConn.next(false);
     }
     this.connection = webSocket(url);
     this.connection.asObservable().subscribe(n => {
       this.subMsg.next(n);
     });
+    this.subConn.next(true);
   }
 
   send(msg: string): void {
