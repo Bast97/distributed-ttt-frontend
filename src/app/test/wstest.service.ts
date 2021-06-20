@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 @Injectable({
   providedIn: 'root'
 })
-export class WstestService {
+export class WstestService implements OnDestroy{
   private connection: WebSocketSubject<string> | undefined;
 
   private subConn: Subject<boolean> = new Subject<boolean>();
@@ -22,6 +22,7 @@ export class WstestService {
     this.connection.asObservable().subscribe(n => {
       this.subMsg.next(n);
     });
+    console.log(this.connection);
     this.subConn.next(true);
   }
 
@@ -35,5 +36,9 @@ export class WstestService {
 
   getMsgAsObservable(): Observable<string> {
     return this.subMsg.asObservable();
+  }
+
+  ngOnDestroy(): void {
+    this.connection?.complete();
   }
 }
