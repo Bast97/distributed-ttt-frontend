@@ -23,14 +23,16 @@ export class TestComponent implements OnInit {
       if (n != undefined) {
         this.rcvMsgs.push(n);
       }
-    })
+    });
   }
 
   clickConnect(): void {
+    console.log('Connecting ...');
     this.wstest.connect(this.inputURL.value);
   }
 
   clickSend(): void {
+    console.log('Sending', this.inputMsg.value);
     this.wstest.send(this.inputMsg.value);
   }
 
