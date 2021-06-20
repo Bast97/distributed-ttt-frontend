@@ -23,7 +23,7 @@ export class GameLogicService {
 
   private playerColor: TTTCellState;
   private opponentColor: TTTCellState;
-  private playerTurn = false;
+  private playerTurn = true;
   private gameState: TTTCellState[] = [
     TTTCellState.EMPTY,
     TTTCellState.EMPTY,
@@ -37,7 +37,7 @@ export class GameLogicService {
   ];
 
   constructor(private socket: SocketInterfaceService) {
-    this.playerTurn = false; // TODO: Entfernen!
+    // this.playerTurn = false; // TODO: Entfernen!
     this.playerColor = TTTCellState.X;
     this.opponentColor = TTTCellState.O;
     this.subState = new Subject<TTTCellState[]>();
@@ -61,8 +61,9 @@ export class GameLogicService {
   }
 
   newMatch(url: string): void {
+    console.log("starting new match");
     // Reset everything
-    this.playerTurn = false;
+    this.playerTurn = true;
     this.gameState = [
       TTTCellState.EMPTY,
       TTTCellState.EMPTY,
@@ -82,9 +83,12 @@ export class GameLogicService {
 
   playTurn(x: number, y: number): void {
     if (this.playerTurn) {
+    console.log("turn " + x + " " + y + " was played");
       if (this.setCell(x, y, this.playerColor)) {
         this.playerTurn = false;
         this.notifyTurnChange();
+        let turn: WSTurn = { x:x, y:y, color:"X" };
+        this.socket.sendRequestTurn(turn);
       }
       this.notifyStateChange();
     }

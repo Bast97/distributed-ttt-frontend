@@ -16,10 +16,13 @@ export class TTTFieldComponent implements OnInit {
     this.clearCanvas();
     this.drawField();
     this.drawMarkings();
+
+    this.eventTimer = new Date().getTime();
   }
 
   click(event: any): void {
-    if (this.eventTimer > new Date().getTime() - 500) { // Limit incoming events to once every second
+    console.log("click");
+    if (this.eventTimer < new Date().getTime() - 500) { // Limit incoming events to once every second
       this.eventTimer = new Date().getTime();
       const clientX = event.clientX;
       const clientY = event.clientY;

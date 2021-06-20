@@ -10,7 +10,7 @@ import { CONFIRM, ERROR, GAME_OVER, INIT, MATCH_START, TURN, WSBean, WSConfirm, 
 export class SocketInterfaceService implements OnDestroy{
   private URL = 'TEST';
   private connection: WebSocketSubject<WSBean> | undefined;
-  private open = false;
+  private open = true;
 
   private subMatchStart: Subject<WSMatchStart> = new Subject<WSMatchStart>();
   private subMatchEnd: Subject<WSGameOver> = new Subject<WSGameOver>();
@@ -32,7 +32,8 @@ export class SocketInterfaceService implements OnDestroy{
       this.connection.complete();
     }
     this.connection = webSocket(url);
-
+    console.log("opened WebSocket connection to:" + url);
+    this.open = true;
     this.connection.subscribe(msg => {
       switch (msg.type) {
         case (INIT):
@@ -58,6 +59,8 @@ export class SocketInterfaceService implements OnDestroy{
   }
 
   sendRequestTurn(turn: WSTurn): void {
+    console.log("sending turn to WS");
+    console.log(this.open);
     if (this.open) {
       this.connection?.next({
         type: TURN,
@@ -89,8 +92,10 @@ export class SocketInterfaceService implements OnDestroy{
     this.open = true;
   }
   private handlerTurn(bean: WSBean): void {
+    console.log("handling turn");
     if (bean.data != undefined) {
       const data: WSTurn = JSON.parse(bean.data);
+      console.log(bean.data);
       this.subTurn.next(data);
     }
   }
