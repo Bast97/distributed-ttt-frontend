@@ -1,5 +1,16 @@
 <div id="playParent">
-    <div id="fieldContainer">
+    <div id="preMatchContainer" fxLayoutAlign="center center" *ngIf="!matchActive">
+        <div fxLayout="column" fxLayoutGap="8px">
+            <div fxLayout="row">
+                <label style="margin-right: 8px;">URL</label>
+                <input type="text" [formControl]="formInputURL"/>
+            </div>
+            <div fxLayout="row">
+                <button style="width: 100%;">Play</button>
+            </div>
+        </div>
+    </div>
+    <div id="fieldContainer" *ngIf="matchActive">
         <app-tttfield></app-tttfield>
     </div>
 </div>

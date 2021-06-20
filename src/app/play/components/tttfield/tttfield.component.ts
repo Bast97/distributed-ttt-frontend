@@ -19,7 +19,7 @@ export class TTTFieldComponent implements OnInit {
   }
 
   click(event: any): void {
-    if (this.eventTimer > new Date().getTime() - 1000) { // Limit incoming events to once every second
+    if (this.eventTimer > new Date().getTime() - 500) { // Limit incoming events to once every second
       this.eventTimer = new Date().getTime();
       const clientX = event.clientX;
       const clientY = event.clientY;

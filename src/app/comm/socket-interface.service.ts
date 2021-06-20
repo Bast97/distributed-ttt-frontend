@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { Observable, Subject } from 'rxjs';
-import { INIT, WSBean, WSConfirm, WSError, WSGameOver, WSMatchStart, WSTurn } from './beans';
+import { CONFIRM, ERROR, GAME_OVER, INIT, MATCH_START, TURN, WSBean, WSConfirm, WSError, WSGameOver, WSMatchStart, WSTurn } from './beans';
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class SocketInterfaceService {
+export class SocketInterfaceService implements OnDestroy{
   private URL = 'TEST';
   private connection: WebSocketSubject<WSBean> | undefined;
   private open = false;
@@ -20,33 +20,106 @@ export class SocketInterfaceService {
 
   constructor() { }
 
-  openConnection(): void {
+  ngOnDestroy(): void {
+    if (this.connection != undefined) {
+      this.connection.complete();
+    }
+  }
+
+  openConnection(url: string): void {
     this.open = false;
     if (this.connection != undefined) {
       this.connection.complete();
     }
-    this.connection = webSocket(this.URL);
+    this.connection = webSocket(url);
 
-    this.connection.subscribe(data => {
-      switch (data.type) {
-        case (INIT): break;
+    this.connection.subscribe(msg => {
+      switch (msg.type) {
+        case (INIT):
+          this.handlerInit(msg);
+          break;
+        case (TURN):
+          this.handlerTurn(msg);
+          break;
+        case (MATCH_START):
+          this.handlerMatchStart(msg);
+          break;
+        case (GAME_OVER):
+          this.handlerGameOver(msg);
+          break;
+        case (CONFIRM):
+          this.handlerConfirm(msg);
+          break;
+        case (ERROR):
+          this.handlerError(msg);
+          break;
       }
     });
   }
 
-  private getMatchStartObservable(): Observable<WSMatchStart> {
+  sendRequestTurn(turn: WSTurn): void {
+    if (this.open) {
+      this.connection?.next({
+        type: TURN,
+        data: JSON.stringify(turn)
+      });
+    } else {
+      this.subError.next('There is currently no connection to server. Please try to reconnect!');
+    }
+  }
+
+  getMatchStartObservable(): Observable<WSMatchStart> {
     return this.subMatchStart.asObservable();
   }
-  private getMatchEndObservable(): Observable<WSGameOver> {
+  getMatchEndObservable(): Observable<WSGameOver> {
     return this.subMatchEnd.asObservable();
   }
-  private getTurnObservable(): Observable<WSTurn> {
+  getTurnObservable(): Observable<WSTurn> {
     return this.subTurn.asObservable();
   }
-  private getConfirmObservable(): Observable<WSConfirm> {
+  getConfirmObservable(): Observable<WSConfirm> {
     return this.subConfirm.asObservable();
   }
-  private getErrorObservable(): Observable<string> {
+  getErrorObservable(): Observable<string> {
     return this.subError.asObservable();
+  }
+
+  private handlerInit(bean: WSBean): void {
+    console.log('Connection Initialised!');
+    this.open = true;
+  }
+  private handlerTurn(bean: WSBean): void {
+    if (bean.data != undefined) {
+      const data: WSTurn = JSON.parse(bean.data);
+      this.subTurn.next(data);
+    }
+  }
+  private handlerMatchStart(bean: WSBean): void {
+    if (bean.data != undefined) {
+      const data: WSMatchStart = JSON.parse(bean.data);
+      this.subMatchStart.next(data);
+    }
+  }
+  private handlerGameOver(bean: WSBean): void {
+    if (bean.data != undefined) {
+      const data: WSGameOver = JSON.parse(bean.data);
+      this.subMatchEnd.next(data);
+    }
+  }
+  private handlerConfirm(bean: WSBean): void {
+    if (bean.data != undefined) {
+      const data: WSConfirm = JSON.parse(bean.data);
+      this.subConfirm.next(data);
+    }
+  }
+  private handlerError(bean: WSBean): void {
+    if (bean.data != undefined) {
+      const data: WSError = JSON.parse(bean.data);
+      this.subError.next(data.msg);
+      if (data.fatal) {
+        this.connection?.complete();
+        this.open = false;
+      }
+    }
   }
 }

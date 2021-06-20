@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { WstestService } from 'src/app/test/wstest.service';
 
 @Component({
   selector: 'app-play-ui',
@@ -6,10 +8,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./play-ui.component.scss']
 })
 export class PlayUIComponent implements OnInit {
+  formInputURL: FormControl = new FormControl();
+  matchActive = false;
 
-  constructor() { }
+  constructor(private ws: WstestService) { }
 
   ngOnInit(): void {
   }
 
+  clickPlay(): void {
+    
+  }
 }
