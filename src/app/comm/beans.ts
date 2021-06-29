@@ -10,7 +10,6 @@ export const INIT = 'INIT';
 export const TURN = 'TURN';
 export const MATCH_START = 'MATCHSTART';
 export const GAME_OVER = 'GAMEOVER';
-export const CONFIRM = 'CONFIRM';
 export const ERROR = 'ERROR';
 
 /**
@@ -19,7 +18,7 @@ export const ERROR = 'ERROR';
 export interface WSTurn {
     x: number;
     y: number;
-    color: string;
+    color: number; // EMPTY: 0, X: 1, O: 2
 }
 
 /**
@@ -33,7 +32,7 @@ export interface WSMatchStart {
 /**
  * Data format that confirms a players turn
  */
-export interface WSConfirm {
+export interface WSGameState {
     gamestate: number[];
 }
 

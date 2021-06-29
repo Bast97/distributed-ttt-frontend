@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { WSConfirm, WSGameOver, WSMatchStart, WSTurn } from 'src/app/comm/beans';
+import { WSGameOver, WSGameState, WSMatchStart, WSTurn } from 'src/app/comm/beans';
 import { SocketInterfaceService } from 'src/app/comm/socket-interface.service';
 
 export enum TTTCellState {
@@ -22,7 +22,6 @@ export class GameLogicService {
   private lastPlayerTurn: Turn | null = null;
 
   private playerColor: TTTCellState;
-  private opponentColor: TTTCellState;
   private playerTurn = true;
   private gameState: TTTCellState[] = [
     TTTCellState.EMPTY,
@@ -39,7 +38,6 @@ export class GameLogicService {
   constructor(private socket: SocketInterfaceService) {
     // this.playerTurn = false; // TODO: Entfernen!
     this.playerColor = TTTCellState.X;
-    this.opponentColor = TTTCellState.O;
     this.subState = new Subject<TTTCellState[]>();
     this.subTurn = new Subject<boolean>();
 
@@ -52,16 +50,12 @@ export class GameLogicService {
     });
 
     this.socket.getTurnObservable().subscribe(data => {
-      this.handlerOpponentTurn(data);
-    });
-
-    this.socket.getConfirmObservable().subscribe(data => {
-      this.handlerConfirm(data);
+      this.handlerTurn(data);
     });
   }
 
   newMatch(url: string): void {
-    console.log("starting new match");
+    console.log('starting new match');
     // Reset everything
     this.playerTurn = true;
     this.gameState = [
@@ -83,14 +77,17 @@ export class GameLogicService {
 
   playTurn(x: number, y: number): void {
     if (this.playerTurn) {
-    console.log("turn " + x + " " + y + " was played");
-      if (this.setCell(x, y, this.playerColor)) {
+      console.log('turn' + x + ' ' + y + 'was played');
+      if (this.gameState[(y * 3) + x] === TTTCellState.EMPTY) {
         this.playerTurn = false;
         this.notifyTurnChange();
-        let turn: WSTurn = { x:x, y:y, color:"X" };
+        const turn: WSTurn = {
+          x,
+          y,
+          color: this.playerColor === TTTCellState.X ? 1 : 2
+        };
         this.socket.sendRequestTurn(turn);
       }
-      this.notifyStateChange();
     }
   }
 
@@ -124,25 +121,18 @@ export class GameLogicService {
     this.subTurn.next(this.playerTurn);
   }
 
-  private handlerOpponentTurn(data: WSTurn): void {
+  private handlerTurn(data: WSGameState): void {
     if (data != undefined) {
-      if (this.gameState[(data.y * 3) + data.x] === TTTCellState.EMPTY) {
-        this.gameState[(data.y * 3) + data.x] = this.playerColor === TTTCellState.X ? TTTCellState.O : TTTCellState.X;
-        this.notifyStateChange();
-        this.playerTurn = true;
-        setTimeout(() => {
-          this.notifyTurnChange();
-        }, 500);
-      } else {
-        console.log('Sync Error!', this.gameState, data);
+      for (let i = 0; i < this.gameState.length && i < data.gamestate.length; i++) {
+        if (data.gamestate[i] === 0) {
+          this.gameState[i] = TTTCellState.EMPTY;
+        } else if (data.gamestate[i] === 1) {
+          this.gameState[i] = TTTCellState.X;
+        } else if (data.gamestate[i] === 2) {
+          this.gameState[i] = TTTCellState.O;
+        }
       }
-    }
-  }
-  private handlerConfirm(data: WSConfirm): void {
-    if (data != undefined) {
-      for (const entry of data.gamestate) {
-        console.log(entry); // TODO: Hier noch eine richtige Kontrolle einfügen
-      }
+      this.notifyStateChange();
     }
   }
   private handlerMatchStart(data: WSMatchStart): void {

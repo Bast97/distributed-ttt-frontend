@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { Observable, Subject } from 'rxjs';
-import { CONFIRM, ERROR, GAME_OVER, INIT, MATCH_START, TURN, WSBean, WSConfirm, WSError, WSGameOver, WSMatchStart, WSTurn } from './beans';
+import { ERROR, GAME_OVER, INIT, MATCH_START, TURN, WSBean, WSGameState, WSError, WSGameOver, WSMatchStart, WSTurn } from './beans';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +14,8 @@ export class SocketInterfaceService implements OnDestroy{
 
   private subMatchStart: Subject<WSMatchStart> = new Subject<WSMatchStart>();
   private subMatchEnd: Subject<WSGameOver> = new Subject<WSGameOver>();
-  private subTurn: Subject<WSTurn> = new Subject<WSTurn>();
-  private subConfirm: Subject<WSConfirm> = new Subject<WSConfirm>();
+  private subTurn: Subject<WSGameState> = new Subject<WSGameState>();
+  private subGameState: Subject<WSGameState> = new Subject<WSGameState>();
   private subError: Subject<string> = new Subject<string>();
 
   constructor() { }
@@ -48,9 +48,6 @@ export class SocketInterfaceService implements OnDestroy{
         case (GAME_OVER):
           this.handlerGameOver(msg);
           break;
-        case (CONFIRM):
-          this.handlerConfirm(msg);
-          break;
         case (ERROR):
           this.handlerError(msg);
           break;
@@ -77,11 +74,11 @@ export class SocketInterfaceService implements OnDestroy{
   getMatchEndObservable(): Observable<WSGameOver> {
     return this.subMatchEnd.asObservable();
   }
-  getTurnObservable(): Observable<WSTurn> {
+  getTurnObservable(): Observable<WSGameState> {
     return this.subTurn.asObservable();
   }
-  getConfirmObservable(): Observable<WSConfirm> {
-    return this.subConfirm.asObservable();
+  getStateObservable(): Observable<WSGameState> {
+    return this.subGameState.asObservable();
   }
   getErrorObservable(): Observable<string> {
     return this.subError.asObservable();
@@ -92,9 +89,9 @@ export class SocketInterfaceService implements OnDestroy{
     this.open = true;
   }
   private handlerTurn(bean: WSBean): void {
-    console.log("handling turn");
+    console.log('handling turn');
     if (bean.data != undefined) {
-      const data: WSTurn = JSON.parse(bean.data);
+      const data: WSGameState = JSON.parse(bean.data);
       console.log(bean.data);
       this.subTurn.next(data);
     }
@@ -109,12 +106,6 @@ export class SocketInterfaceService implements OnDestroy{
     if (bean.data != undefined) {
       const data: WSGameOver = JSON.parse(bean.data);
       this.subMatchEnd.next(data);
-    }
-  }
-  private handlerConfirm(bean: WSBean): void {
-    if (bean.data != undefined) {
-      const data: WSConfirm = JSON.parse(bean.data);
-      this.subConfirm.next(data);
     }
   }
   private handlerError(bean: WSBean): void {
