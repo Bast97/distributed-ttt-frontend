@@ -3,13 +3,13 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { Observable, Subject } from 'rxjs';
 import { ERROR, GAME_OVER, INIT, MATCH_START, TURN, WSBean, WSGameState, WSError, WSGameOver, WSMatchStart, WSTurn } from './beans';
 
+let connection: WebSocketSubject<any>;
+
 @Injectable({
   providedIn: 'root'
 })
-
 export class SocketInterfaceService implements OnDestroy{
   private URL = 'TEST';
-  private connection: WebSocketSubject<WSBean> | undefined;
   private open = true;
 
   private subMatchStart: Subject<WSMatchStart> = new Subject<WSMatchStart>();
@@ -18,23 +18,25 @@ export class SocketInterfaceService implements OnDestroy{
   private subGameState: Subject<WSGameState> = new Subject<WSGameState>();
   private subError: Subject<string> = new Subject<string>();
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnDestroy(): void {
-    if (this.connection != undefined) {
-      this.connection.complete();
+    if (connection != undefined) {
+      console.log('Socket Service - Destroy');
+      connection.complete();
     }
   }
 
   openConnection(url: string): void {
     this.open = false;
-    if (this.connection != undefined) {
-      this.connection.complete();
+    if (connection != undefined) {
+      connection.complete();
     }
-    this.connection = webSocket(url);
-    console.log("opened WebSocket connection to:" + url);
+    connection = webSocket(url);
+    console.log('opened WebSocket connection to:', url);
     this.open = true;
-    this.connection.subscribe(msg => {
+    connection.subscribe(msg => {
       switch (msg.type) {
         case (INIT):
           this.handlerInit(msg);
@@ -56,14 +58,13 @@ export class SocketInterfaceService implements OnDestroy{
   }
 
   sendRequestTurn(turn: WSTurn): void {
-    console.log("sending turn to WS");
-    console.log(this.open);
-    if (this.open) {
-      this.connection?.next({
+    if (this.open && connection != undefined) {
+      connection.next({
         type: TURN,
         data: JSON.stringify(turn)
       });
     } else {
+      console.log('Connection is currently closed');
       this.subError.next('There is currently no connection to server. Please try to reconnect!');
     }
   }
@@ -92,7 +93,6 @@ export class SocketInterfaceService implements OnDestroy{
     console.log('handling turn');
     if (bean.data != undefined) {
       const data: WSGameState = JSON.parse(bean.data);
-      console.log(bean.data);
       this.subTurn.next(data);
     }
   }
@@ -113,7 +113,7 @@ export class SocketInterfaceService implements OnDestroy{
       const data: WSError = JSON.parse(bean.data);
       this.subError.next(data.msg);
       if (data.fatal) {
-        this.connection?.complete();
+        connection.complete();
         this.open = false;
       }
     }

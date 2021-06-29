@@ -25,7 +25,7 @@ export interface WSTurn {
  * Data format that is received by the front end when the match starts
  */
 export interface WSMatchStart {
-    color: string;
+    color: number;
     turn: boolean;
 }
 

@@ -10,7 +10,11 @@ export class TTTFieldComponent implements OnInit {
   @ViewChild('tttCanvas', { static: true }) canvas!: ElementRef<HTMLCanvasElement>;
   private eventTimer = 0;
 
-  constructor(private gameLogic: GameLogicService) { }
+  constructor(private gameLogic: GameLogicService) {
+    this.gameLogic.getObservableGameState().subscribe(gamestate => {
+      this.drawMarkings();
+    });
+  }
 
   ngOnInit(): void {
     this.clearCanvas();
@@ -21,7 +25,6 @@ export class TTTFieldComponent implements OnInit {
   }
 
   click(event: any): void {
-    console.log("click");
     if (this.eventTimer < new Date().getTime() - 500) { // Limit incoming events to once every second
       this.eventTimer = new Date().getTime();
       const clientX = event.clientX;

@@ -55,7 +55,7 @@ export class GameLogicService {
   }
 
   newMatch(url: string): void {
-    console.log('starting new match');
+    console.log('Starting new match');
     // Reset everything
     this.playerTurn = true;
     this.gameState = [
@@ -77,7 +77,7 @@ export class GameLogicService {
 
   playTurn(x: number, y: number): void {
     if (this.playerTurn) {
-      console.log('turn' + x + ' ' + y + 'was played');
+      console.log('Turn', x, y, 'was played');
       if (this.gameState[(y * 3) + x] === TTTCellState.EMPTY) {
         this.playerTurn = false;
         this.notifyTurnChange();
@@ -132,12 +132,13 @@ export class GameLogicService {
           this.gameState[i] = TTTCellState.O;
         }
       }
+      console.log(this.gameState);
       this.notifyStateChange();
     }
   }
   private handlerMatchStart(data: WSMatchStart): void {
     if (data != undefined) {
-      this.playerColor = data.color === 'X' ? TTTCellState.X : TTTCellState.O;
+      this.playerColor = data.color === 1 ? TTTCellState.X : TTTCellState.O;
       this.playerTurn = data.turn;
       this.notifyTurnChange();
     }
