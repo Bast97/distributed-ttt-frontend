@@ -16,29 +16,21 @@ interface Turn {
   providedIn: 'root'
 })
 export class GameLogicService {
-  private subState: Subject<TTTCellState[]>;
+  private subState: Subject<TTTCellState[][]>;
   private subTurn: Subject<boolean>;
 
   private lastPlayerTurn: Turn | null = null;
 
   private playerColor: TTTCellState;
   private playerTurn = true;
-  private gameState: TTTCellState[] = [
-    TTTCellState.EMPTY,
-    TTTCellState.EMPTY,
-    TTTCellState.EMPTY,
-    TTTCellState.EMPTY,
-    TTTCellState.EMPTY,
-    TTTCellState.EMPTY,
-    TTTCellState.EMPTY,
-    TTTCellState.EMPTY,
-    TTTCellState.EMPTY,
-  ];
+  private gameState: TTTCellState[][] = [[TTTCellState.EMPTY, TTTCellState.EMPTY, TTTCellState.EMPTY],
+                      [TTTCellState.EMPTY, TTTCellState.EMPTY, TTTCellState.EMPTY],
+                      [TTTCellState.EMPTY, TTTCellState.EMPTY, TTTCellState.EMPTY]];
 
   constructor(private socket: SocketInterfaceService) {
     // this.playerTurn = false; // TODO: Entfernen!
     this.playerColor = TTTCellState.X;
-    this.subState = new Subject<TTTCellState[]>();
+    this.subState = new Subject<TTTCellState[][]>();
     this.subTurn = new Subject<boolean>();
 
     this.socket.getMatchStartObservable().subscribe(data => {
@@ -58,17 +50,9 @@ export class GameLogicService {
     console.log('Starting new match');
     // Reset everything
     this.playerTurn = true;
-    this.gameState = [
-      TTTCellState.EMPTY,
-      TTTCellState.EMPTY,
-      TTTCellState.EMPTY,
-      TTTCellState.EMPTY,
-      TTTCellState.EMPTY,
-      TTTCellState.EMPTY,
-      TTTCellState.EMPTY,
-      TTTCellState.EMPTY,
-      TTTCellState.EMPTY,
-    ];
+    this.gameState = [[TTTCellState.EMPTY, TTTCellState.EMPTY, TTTCellState.EMPTY],
+                      [TTTCellState.EMPTY, TTTCellState.EMPTY, TTTCellState.EMPTY],
+                      [TTTCellState.EMPTY, TTTCellState.EMPTY, TTTCellState.EMPTY]];
     this.notifyStateChange();
     this.notifyTurnChange();
 
@@ -78,7 +62,7 @@ export class GameLogicService {
   playTurn(x: number, y: number): void {
     if (this.playerTurn) {
       console.log('Turn', x, y, 'was played');
-      if (this.gameState[(y * 3) + x] === TTTCellState.EMPTY) {
+      if (this.gameState[y][x] === TTTCellState.EMPTY) {
         this.playerTurn = false;
         this.notifyTurnChange();
         const turn: WSTurn = {
@@ -91,11 +75,11 @@ export class GameLogicService {
     }
   }
 
-  getGameState(): TTTCellState[] {
+  getGameState(): TTTCellState[][] {
     return [...this.gameState];
   }
 
-  getObservableGameState(): Observable<TTTCellState[]> {
+  getObservableGameState(): Observable<TTTCellState[][]> {
     return this.subState.asObservable();
   }
 
@@ -104,8 +88,8 @@ export class GameLogicService {
   }
 
   private setCell(x: number, y: number, color: TTTCellState): boolean {
-    if (x >= 0 && x < 3 && y >= 0 && y < 3 && this.gameState[(y * 3) + x] === TTTCellState.EMPTY) {
-      this.gameState[(y * 3) + x] = color;
+    if (x >= 0 && x < 3 && y >= 0 && y < 3 && this.gameState[y][x] === TTTCellState.EMPTY) {
+      this.gameState[y][x] = color;
       this.notifyStateChange();
       return true;
     } else {
@@ -121,18 +105,37 @@ export class GameLogicService {
     this.subTurn.next(this.playerTurn);
   }
 
-  private handlerTurn(data: WSGameState): void {
+  private handlerTurn(data: WSGameState | string[][]): void {
     if (data != undefined) {
-      for (let i = 0; i < this.gameState.length && i < data.gamestate.length; i++) {
-        if (data.gamestate[i] === 0) {
-          this.gameState[i] = TTTCellState.EMPTY;
-        } else if (data.gamestate[i] === 1) {
-          this.gameState[i] = TTTCellState.X;
-        } else if (data.gamestate[i] === 2) {
-          this.gameState[i] = TTTCellState.O;
+      console.log(data);
+      var squares: any = data;
+      console.log(squares.length);
+      // squares.forEach( (element) => {
+      //   console.log("oi");
+      // });
+      for(let y = 0; y < squares.length; y++) {
+        for(let x = 0; x < squares[y].length; x++) {
+          if(squares[y][x] == "EMPTY") {
+            this.gameState[y][x] = TTTCellState.EMPTY;
+          } else if(squares[y][x] == "X") {
+            this.gameState[y][x] = TTTCellState.X;
+          } else if(squares[y][x] == "O") {
+            this.gameState[y][x] = TTTCellState.O;
+          }
         }
       }
-      console.log(this.gameState);
+
+      // for (let i = 0; i < this.gameState.length && i < data.gamestate.length; i++) {
+      //   if (data.gamestate[i] === 0) {
+      //     this.gameState[i] = TTTCellState.EMPTY;
+      //   } else if (data.gamestate[i] === 1) {
+      //     this.gameState[i] = TTTCellState.X;
+      //   } else if (data.gamestate[i] === 2) {
+      //     this.gameState[i] = TTTCellState.O;
+      //   }
+      // }
+
+      // console.log(this.gameState);
       this.notifyStateChange();
     }
   }
