@@ -83,7 +83,8 @@ export class GameLogicService {
         this.notifyTurnChange();
         const turn: WSTurn = {
           x,
-          y
+          y,
+          uid: this.socket.uid
         };
         this.socket.sendRequestTurn(turn);
       }
@@ -100,16 +101,6 @@ export class GameLogicService {
 
   getObservableTurn(): Observable<boolean> {
     return this.subTurn.asObservable();
-  }
-
-  private setCell(x: number, y: number, color: TTTCellState): boolean {
-    if (x >= 0 && x < 3 && y >= 0 && y < 3 && this.gameState[(y * 3) + x] === TTTCellState.EMPTY) {
-      this.gameState[(y * 3) + x] = color;
-      this.notifyStateChange();
-      return true;
-    } else {
-      return false;
-    }
   }
 
   private notifyStateChange(): void {
