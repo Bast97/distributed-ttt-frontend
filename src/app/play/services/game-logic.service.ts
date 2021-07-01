@@ -120,6 +120,11 @@ export class GameLogicService {
       }
       console.log(this.gameState);
       this.notifyStateChange();
+
+      if(data.whoseTurn === this.playerColor) { // Dieser Vergleich muss eventuell überarbeitet werden!
+        this.playerTurn = true;
+        this.notifyTurnChange();
+      }
     }
   }
   private handlerMatchStart(data: WSMatchStart): void {

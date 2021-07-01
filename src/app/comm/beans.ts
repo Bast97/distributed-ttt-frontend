@@ -34,6 +34,7 @@ export interface WSMatchStart {
  */
 export interface WSGameState {
     gamestate: number[];
+    whoseTurn: number;
 }
 
 /**
