@@ -7,7 +7,7 @@ import { NavControlService } from './nav/service/nav-control.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'distributed-ttt';
+  title = 'Distributed TTT';
 
   constructor(private navService: NavControlService) {
     this.navService.setMenu([

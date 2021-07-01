@@ -20,13 +20,13 @@
   min-height: 56px;
   place-content: center space-between;
   align-items: center;
-  background-color: #050505;
-  color: #e2e2e2;
+  background-color: rgb(255, 255, 255);
+  color: #282828;
   padding: 0 12px 0 12px;
 }
 
 .nav-bar {
-  background-color: #151965;
+  background-color: rgb(78, 78, 78);
   min-height: 48px;
   padding-left: 5px;
   padding-right: 5px;
@@ -66,7 +66,7 @@ li a mat-icon {
 }
 
 .active {
-  background-color: #4CAF50;
+  background-color: #555555;
 }
 
 .entry-wrapper {
@@ -80,11 +80,11 @@ li a mat-icon {
 }
 
 .entry-wrapper:hover {
-  box-shadow: 2px 0px 3px grey;
+  box-shadow: 2px 1px 3px rgb(34, 34, 34);
 }
 
 .entry-wrapper:active {
-  box-shadow: 1px 0px 2px grey;
+  box-shadow: 1px 1px 2px rgb(34, 34, 34);
 }
 
 .entry-wrapper mat-icon {
