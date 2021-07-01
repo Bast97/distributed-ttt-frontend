@@ -3,7 +3,7 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { Observable, Subject } from 'rxjs';
 import { ERROR, GAME_OVER, INIT, MATCH_START, TURN, WSBean, WSGameState, WSError, WSGameOver, WSMatchStart, WSTurn } from './beans';
 
-let connection: WebSocketSubject<any>;
+let connection: WebSocketSubject<WSBean>;
 
 @Injectable({
   providedIn: 'root'
@@ -91,6 +91,7 @@ export class SocketInterfaceService implements OnDestroy{
   }
   private handlerTurn(bean: WSBean): void {
     console.log('handling turn');
+    console.log(bean);
     if (bean.data != undefined) {
       const data: WSGameState = JSON.parse(bean.data);
       this.subTurn.next(data);
