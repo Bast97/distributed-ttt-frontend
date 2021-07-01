@@ -9,6 +9,7 @@ import { GameLogicService } from 'src/app/play/services/game-logic.service';
 })
 export class PlayUIComponent implements OnInit {
   formInputURL: FormControl = new FormControl();
+  formInputUID: FormControl = new FormControl();
   matchActive = false;
 
   constructor(private gameLogic: GameLogicService) {
@@ -17,11 +18,11 @@ export class PlayUIComponent implements OnInit {
   ngOnInit(): void {}
 
   clickPlay(): void {
-    if (this.formInputURL.value) {
+    if (this.formInputURL.value && this.formInputUID.value?.length > 0) {
       console.log('clicked play');
       console.log(this.formInputURL.value);
       this.matchActive = true;
-      this.gameLogic.newMatch(this.formInputURL.value, "test-uid");
+      this.gameLogic.newMatch(this.formInputURL.value, this.formInputUID.value);
     }
   }
 }

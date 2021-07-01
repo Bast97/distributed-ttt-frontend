@@ -2,8 +2,12 @@
     <div id="preMatchContainer" fxLayoutAlign="center center" *ngIf="!matchActive">
         <div fxLayout="column" fxLayoutGap="8px">
             <div fxLayout="row">
-                <label style="margin-right: 8px;">URL</label>
+                <label style="margin-right: 8px;">URL:</label>
                 <input type="text" [formControl]="formInputURL"/>
+            </div>
+            <div fxLayout="row">
+                <label style="margin-right: 8px;">UID:</label>
+                <input type="text" [formControl]="formInputUID"/>
             </div>
             <div fxLayout="row">
                 <button (click)="clickPlay()" style="width: 100%;">Play</button>

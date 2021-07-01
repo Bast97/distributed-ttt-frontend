@@ -51,7 +51,7 @@ export class GameLogicService {
   }
 
   newMatch(url: string, uid: string): void {
-    console.log('Starting new match');
+    console.log('Starting new match with UID', uid);
     // Reset everything
     this.playerTurn = true;
     this.gameState = [
