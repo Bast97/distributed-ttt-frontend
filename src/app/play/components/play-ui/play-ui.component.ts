@@ -34,7 +34,8 @@ export class PlayUIComponent implements OnInit {
       console.log('Requesting match from', this.formInputMatchMaker.value);
       this.matchmaker.getMatch(this.formInputMatchMaker.value).subscribe({
         next: data => {
-          this.gameLogic.newMatch(this.formInputBaseSocketURL.value + '/' + data.matchId, data.playerId, data.playerNum)
+          this.gameLogic.newMatch(this.formInputBaseSocketURL.value + '/' + data.matchId, data.playerId, data.playerNum);
+          this.matchActive = true;
         },
         error: msg => {
           console.log(msg);
