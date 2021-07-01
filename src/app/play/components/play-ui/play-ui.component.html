@@ -2,15 +2,33 @@
     <div id="preMatchContainer" fxLayoutAlign="center center" *ngIf="!matchActive">
         <div fxLayout="column" fxLayoutGap="8px">
             <div fxLayout="row">
-                <label style="margin-right: 8px;">URL:</label>
-                <input type="text" [formControl]="formInputURL"/>
+                <label style="min-width: 150px;">URL:</label>
+                <input type="text" style="min-width: 300px;" [formControl]="formInputURL"/>
             </div>
             <div fxLayout="row">
-                <label style="margin-right: 8px;">UID:</label>
-                <input type="text" [formControl]="formInputUID"/>
+                <label style="min-width: 150px;">UID:</label>
+                <input type="text" style="min-width: 300px;" [formControl]="formInputUID"/>
             </div>
             <div fxLayout="row">
-                <button (click)="clickPlay()" style="width: 100%;">Play</button>
+                <label style="min-width: 150px;">Player is X (O when not checked):</label>
+                <input type="checkbox" [formControl]="formInputPlayerX"/>
+            </div>
+            <div fxLayout="row">
+                <button (click)="clickDirectConnect()" style="width: 100%;">Directly connect to game</button>
+            </div>
+            <div>
+                <hr style="width: 100%;">
+            </div>
+            <div fxLayout="row">
+                <label style="min-width: 150px;">Matchmaker URL:</label>
+                <input type="text" style="min-width: 300px;" [formControl]="formInputMatchMaker"/>
+            </div>
+            <div fxLayout="row">
+                <label style="min-width: 150px;">Websocket Base Url:</label>
+                <input type="text" style="min-width: 300px;" [formControl]="formInputBaseSocketURL"/>
+            </div>
+            <div fxLayout="row">
+                <button (click)="clickDirectConnect()" style="width: 100%;">Play through Matchmaker</button>
             </div>
         </div>
     </div>

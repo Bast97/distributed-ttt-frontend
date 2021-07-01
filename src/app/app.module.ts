@@ -13,6 +13,7 @@ import { OverviewComponent } from './overview/components/overview/overview.compo
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { TestComponent } from './test/test/test.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     FlexLayoutModule,
     FormsModule,
     BrowserAnimationsModule,
+    HttpClientModule,
     MatToolbarModule,
     MatIconModule,
     ReactiveFormsModule

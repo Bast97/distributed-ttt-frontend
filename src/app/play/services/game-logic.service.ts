@@ -18,7 +18,7 @@ export class GameLogicService {
   private subTurn: Subject<boolean>;
 
   private playerColor: TTTCellState;
-  private playerTurn = true;
+  private playerTurn = false;
   private gameState: TTTCellState[] = [
     TTTCellState.EMPTY,
     TTTCellState.EMPTY,
@@ -50,10 +50,10 @@ export class GameLogicService {
     });
   }
 
-  newMatch(url: string, uid: string): void {
-    console.log('Starting new match with UID', uid);
+  newMatch(url: string, uid: string, playerNumber: number): void {
+    console.log('Starting new match with UID', uid, 'as player', playerNumber);
     // Reset everything
-    this.playerTurn = true;
+    this.playerTurn = false;
     this.gameState = [
       TTTCellState.EMPTY,
       TTTCellState.EMPTY,
@@ -65,6 +65,7 @@ export class GameLogicService {
       TTTCellState.EMPTY,
       TTTCellState.EMPTY,
     ];
+    this.playerColor = playerNumber === TTTCellState.X ? TTTCellState.X : TTTCellState.O;
     this.notifyStateChange();
     this.notifyTurnChange();
 
@@ -73,7 +74,7 @@ export class GameLogicService {
 
   playTurn(x: number, y: number): void {
     if (this.playerTurn) {
-      console.log('Turn', x, y, 'was played');
+      console.log('Turn', x, y, 'was played with color', this.playerColor);
       if (this.gameState[(y * 3) + x] === TTTCellState.EMPTY) {
         this.playerTurn = false;
         this.notifyTurnChange();
@@ -129,9 +130,9 @@ export class GameLogicService {
   }
   private handlerMatchStart(data: WSMatchStart): void {
     if (data != undefined) {
-      this.playerColor = data.color === 1 ? TTTCellState.X : TTTCellState.O;
-      this.playerTurn = data.turn;
-      this.notifyTurnChange();
+      // this.playerColor = data.color === 1 ? TTTCellState.X : TTTCellState.O;
+      // this.playerTurn = data.turn;
+      // this.notifyTurnChange();
     }
   }
   private handlerMatchEnd(data: WSGameOver): void {

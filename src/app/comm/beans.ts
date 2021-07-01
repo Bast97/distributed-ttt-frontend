@@ -53,3 +53,9 @@ export interface WSGameOver {
     victory: boolean;
     tie: boolean;
 }
+
+export interface MatchResult {
+    playerId: string;
+    matchId: string;
+    playerNum: number;
+}
