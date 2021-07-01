@@ -4,6 +4,7 @@
 export interface WSBean {
     type: string;
     data: string; // Since we are using a Java backend, a double JSON to String encoding might be necessary
+    uid: string;
 }
 
 export const INIT = 'INIT';
@@ -18,7 +19,6 @@ export const ERROR = 'ERROR';
 export interface WSTurn {
     x: number;
     y: number;
-    color: number; // EMPTY: 0, X: 1, O: 2
 }
 
 /**
