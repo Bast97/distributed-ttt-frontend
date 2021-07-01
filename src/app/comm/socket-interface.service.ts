@@ -66,7 +66,7 @@ export class SocketInterfaceService implements OnDestroy{
       connection.next({
         type: TURN,
         data: JSON.stringify(turn),
-        uid: this.uid != undefined ? this.uid : ""
+        uid: this.uid != undefined ? this.uid : "ERROR"
       });
     } else {
       console.log('Connection is currently closed');
