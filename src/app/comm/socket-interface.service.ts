@@ -11,6 +11,7 @@ let connection: WebSocketSubject<WSBean>;
 export class SocketInterfaceService implements OnDestroy{
   private URL = 'TEST';
   private open = true;
+  private _uid: string;
 
   private subMatchStart: Subject<WSMatchStart> = new Subject<WSMatchStart>();
   private subMatchEnd: Subject<WSGameOver> = new Subject<WSGameOver>();
@@ -19,6 +20,7 @@ export class SocketInterfaceService implements OnDestroy{
   private subError: Subject<string> = new Subject<string>();
 
   constructor() {
+    this._uid = "";
   }
 
   ngOnDestroy(): void {
@@ -28,13 +30,15 @@ export class SocketInterfaceService implements OnDestroy{
     }
   }
 
-  openConnection(url: string): void {
+  openConnection(url: string, uid: string): void {
     this.open = false;
     if (connection != undefined) {
       connection.complete();
     }
+
+    this._uid = uid;
     connection = webSocket(url);
-    console.log('opened WebSocket connection to:', url);
+    console.log('Opened WebSocket connection to:', url);
     this.open = true;
     connection.subscribe(msg => {
       switch (msg.type) {
@@ -61,7 +65,8 @@ export class SocketInterfaceService implements OnDestroy{
     if (this.open && connection != undefined) {
       connection.next({
         type: TURN,
-        data: JSON.stringify(turn)
+        data: JSON.stringify(turn),
+        uid: this.uid != undefined ? this.uid : ""
       });
     } else {
       console.log('Connection is currently closed');
@@ -118,5 +123,9 @@ export class SocketInterfaceService implements OnDestroy{
         this.open = false;
       }
     }
+  }
+
+  get uid() {
+    return this._uid;
   }
 }

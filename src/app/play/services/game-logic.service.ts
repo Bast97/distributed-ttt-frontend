@@ -72,7 +72,7 @@ export class GameLogicService {
     this.notifyStateChange();
     this.notifyTurnChange();
 
-    this.socket.openConnection(url);
+    this.socket.openConnection(url, "TESTTESTTEST");
   }
 
   playTurn(x: number, y: number): void {
@@ -83,8 +83,7 @@ export class GameLogicService {
         this.notifyTurnChange();
         const turn: WSTurn = {
           x,
-          y,
-          color: this.playerColor === TTTCellState.X ? 1 : 2
+          y
         };
         this.socket.sendRequestTurn(turn);
       }
