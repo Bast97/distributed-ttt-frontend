@@ -1,5 +1,3 @@
-import { TTTCellState } from 'src/app/play/services/game-logic.service';
-
 /**
  * The main structure for the data exchange during the socket communication
  */
@@ -35,8 +33,7 @@ export interface WSMatchStart {
  * Data format that confirms a players turn
  */
 export interface WSGameState {
-    gamestate: TTTCellState[][];
-    length: number;
+    gamestate: number[];
 }
 
 /**

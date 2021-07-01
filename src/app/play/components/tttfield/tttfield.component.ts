@@ -96,7 +96,7 @@ export class TTTFieldComponent implements OnInit {
           const cellCenterX = (cellWidth * x) + (cellWidth / 2);
           const cellCenterY = (cellHeight * y) + (cellHeight / 2);
 
-          if (this.gameLogic.getGameState()[y][x] === TTTCellState.X) {
+          if (this.gameLogic.getGameState()[(y * 3) + x] === TTTCellState.X) {
             context.beginPath();
             context.moveTo(cellCenterX - markRadius, cellCenterY - markRadius);
             context.lineTo(cellCenterX + markRadius, cellCenterY + markRadius);
@@ -104,7 +104,7 @@ export class TTTFieldComponent implements OnInit {
             context.lineTo(cellCenterX - markRadius, cellCenterY + markRadius);
             context.stroke();
           }
-          if (this.gameLogic.getGameState()[y][x] === TTTCellState.O) {
+          if (this.gameLogic.getGameState()[(y * 3) + x] === TTTCellState.O) {
             context.beginPath();
             context.arc(cellCenterX, cellCenterY, markRadius, 0, 2 * Math.PI);
             context.stroke();
