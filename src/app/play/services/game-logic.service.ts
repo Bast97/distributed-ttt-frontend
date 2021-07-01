@@ -3,13 +3,11 @@ import { Observable, Subject } from 'rxjs';
 import { WSGameOver, WSGameState, WSMatchStart, WSTurn } from 'src/app/comm/beans';
 import { SocketInterfaceService } from 'src/app/comm/socket-interface.service';
 
+/**
+ * Enum for the state of a Tic-Tac-Toe cell
+ */
 export enum TTTCellState {
   EMPTY, X, O
-}
-
-interface Turn {
-  x: number;
-  y: number;
 }
 
 @Injectable({
@@ -18,8 +16,6 @@ interface Turn {
 export class GameLogicService {
   private subState: Subject<TTTCellState[]>;
   private subTurn: Subject<boolean>;
-
-  private lastPlayerTurn: Turn | null = null;
 
   private playerColor: TTTCellState;
   private playerTurn = true;
@@ -54,7 +50,7 @@ export class GameLogicService {
     });
   }
 
-  newMatch(url: string): void {
+  newMatch(url: string, uid: string): void {
     console.log('Starting new match');
     // Reset everything
     this.playerTurn = true;
@@ -72,7 +68,7 @@ export class GameLogicService {
     this.notifyStateChange();
     this.notifyTurnChange();
 
-    this.socket.openConnection(url, "TESTTESTTEST");
+    this.socket.openConnection(url, uid);
   }
 
   playTurn(x: number, y: number): void {

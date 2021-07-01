@@ -21,7 +21,7 @@ export class PlayUIComponent implements OnInit {
       console.log('clicked play');
       console.log(this.formInputURL.value);
       this.matchActive = true;
-      this.gameLogic.newMatch(this.formInputURL.value);
+      this.gameLogic.newMatch(this.formInputURL.value, "test-uid");
     }
   }
 }
