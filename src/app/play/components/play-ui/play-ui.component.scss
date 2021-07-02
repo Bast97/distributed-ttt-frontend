@@ -8,6 +8,29 @@
 
 #fieldContainer {
     position: absolute;
+    min-width: 145vh;
     width: 100%;
     padding-top: 50px;
+}
+
+#controlContainer {
+    padding-top: 50px;
+    width: 25%;
+    height: 80%;
+}
+
+#controlElementsBox {
+    padding: 20px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: large;
+    min-width: 200px;
+    min-height: 300px;
+    width: 20vw;
+    height: 40vh;
+    border-top: 1px;
+    border-left: 1px;
+    border-top-style: solid;
+    border-left-style: solid;
+    border-color: rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);
 }

@@ -35,4 +35,17 @@
     <div id="fieldContainer" *ngIf="matchActive">
         <app-tttfield></app-tttfield>
     </div>
+    <div id="controlContainer" fxLayoutAlign="center" *ngIf="matchActive">
+        <div id="controlElementsBox" fxLayout="column" fxLayoutGap="20px;">
+            <div fxLayout="row" *ngIf="turn" style="color: green;">
+                It's your turn!
+            </div>
+            <div fxLayout="row" *ngIf="!turn" style="color: red;">
+                Please wait for your turn!
+            </div>
+            <div fxLayout="row" style="padding-top: 20px;">
+                Your color: {{playerColor}}
+            </div>
+        </div>
+    </div>
 </div>

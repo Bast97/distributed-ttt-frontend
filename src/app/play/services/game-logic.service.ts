@@ -48,6 +48,10 @@ export class GameLogicService {
     this.socket.getTurnObservable().subscribe(data => {
       this.handlerTurn(data);
     });
+
+    this.socket.getErrorObservable().subscribe(data => {
+
+    });
   }
 
   newMatch(url: string, uid: string, playerNumber: number): void {
@@ -130,6 +134,7 @@ export class GameLogicService {
   }
   private handlerMatchStart(data: WSMatchStart): void {
     if (data != undefined) {
+      // Currently not in use!
       // this.playerColor = data.color === 1 ? TTTCellState.X : TTTCellState.O;
       // this.playerTurn = data.turn;
       // this.notifyTurnChange();

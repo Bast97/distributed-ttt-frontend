@@ -15,26 +15,34 @@ export class PlayUIComponent implements OnInit {
   formInputMatchMaker: FormControl = new FormControl();
   formInputBaseSocketURL: FormControl = new FormControl();
   matchActive = false;
+  playerColor = '';
+  turn = false;
 
   constructor(private gameLogic: GameLogicService, private matchmaker: MatchmakingService) {
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.gameLogic.getObservableTurn().subscribe( t => {
+      this.turn = t;
+    });
+  }
 
   clickDirectConnect(): void {
     if (this.formInputURL.value && this.formInputUID.value?.length > 0 && this.formInputPlayerX.value != undefined) {
       console.log(this.formInputURL.value);
+      this.playerColor = this.formInputPlayerX.value ? 'X' : 'O';
       this.matchActive = true;
       this.gameLogic.newMatch(this.formInputURL.value, this.formInputUID.value, this.formInputPlayerX.value ? 1 : 2);
     }
   }
 
   clickMatchMaker(): void {
-    if(this.formInputMatchMaker.value && this.formInputBaseSocketURL.value) {
+    if (this.formInputMatchMaker.value && this.formInputBaseSocketURL.value) {
       console.log('Requesting match from', this.formInputMatchMaker.value);
       this.matchmaker.getMatch(this.formInputMatchMaker.value).subscribe({
         next: data => {
           this.gameLogic.newMatch(this.formInputBaseSocketURL.value + '/' + data.matchId, data.playerId, data.playerNum);
+          this.playerColor = data.playerNum === 1 ? 'X' : 'O';
           this.matchActive = true;
         },
         error: msg => {

@@ -8,10 +8,11 @@ let connection: WebSocketSubject<WSBean>;
 @Injectable({
   providedIn: 'root'
 })
-export class SocketInterfaceService implements OnDestroy{
+export class SocketInterfaceService implements OnDestroy {
   private URL = 'TEST';
   private open = true;
   private _uid: string;
+  private lastConn: string;
 
   private subMatchStart: Subject<WSMatchStart> = new Subject<WSMatchStart>();
   private subMatchEnd: Subject<WSGameOver> = new Subject<WSGameOver>();
@@ -20,7 +21,8 @@ export class SocketInterfaceService implements OnDestroy{
   private subError: Subject<string> = new Subject<string>();
 
   constructor() {
-    this._uid = "";
+    this._uid = '';
+    this.lastConn = '';
   }
 
   ngOnDestroy(): void {
@@ -111,6 +113,10 @@ export class SocketInterfaceService implements OnDestroy{
     if (bean.data != undefined) {
       const data: WSGameOver = JSON.parse(bean.data);
       this.subMatchEnd.next(data);
+      setTimeout(() => {
+        console.log('Game finished. Closing connection ...');
+        connection.complete();
+      }, 5000);
     }
   }
   private handlerError(bean: WSBean): void {
@@ -124,7 +130,7 @@ export class SocketInterfaceService implements OnDestroy{
     }
   }
 
-  get uid() {
+  get uid(): string {
     return this._uid;
   }
 }
