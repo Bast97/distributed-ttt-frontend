@@ -1,0 +1,71 @@
+#victoryMsg {
+    font-size: 30px;
+    color: green;
+    font-weight: bold;
+}
+#lostMsg {
+    font-size: 30px;
+    color: red;
+    font-weight: bold;
+}
+#tieMsg {
+    font-size: 30px;
+    color: rgba(0, 0, 0, 0.8);
+    font-weight: bold;
+}
+
+.dialogOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+    background-color: rgba(0, 0, 0, 0.4);
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+.dialogContainer {
+    width: 800px;
+    height: 600px;
+    background-color: white;
+    box-shadow: 3px 3px 2px 1px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+}
+
+.dialogHeader {
+    font-size: 28px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.8);
+    padding: 24px;
+    height: 10%;
+}
+
+.dialogBody {
+    height: 80%;
+}
+
+.dialogFooter {
+    height: 10%;
+    padding: 24px;
+}
+
+.separator {
+    color: gray;
+    width: 95%;
+}
+
+.dialogButton {
+    font-size: 14px;
+    color: white;
+    padding: 10px 20px 10px 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
+    border-style: solid;
+    border-width: 1px;
+}
+
+.dialogButton:active {
+    background-color: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 rgba(0, 0, 0, 0.2);
+}

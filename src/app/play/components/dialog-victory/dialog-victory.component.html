@@ -1,0 +1,17 @@
+<div class="dialogOverlay" id="dialogBackground" *ngIf="display" fxLayoutAlign="center center">
+    <div class="dialogContainer" fxLayout="column">
+        <div fxLayout="row" class="dialogHeader">
+            Game Over
+        </div>
+        <hr class="separator">
+        <div fxLayout="row" class="dialogBody" fxLayoutAlign="center center">
+            <p *ngIf="victory && !tie" id="victoryMsg">You have won!</p>
+            <p *ngIf="!victory && !tie" id="lostMsg">You have lost</p>
+            <p *ngIf="tie" id="tieMsg">It's a tie</p>
+        </div>
+        <hr class="separator">
+        <div fxLayout="row" class="dialogFooter" fxLayoutAlign="end center">
+            <button class="dialogButton">Close</button>
+        </div>
+    </div>
+</div>

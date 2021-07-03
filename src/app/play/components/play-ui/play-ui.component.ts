@@ -51,4 +51,10 @@ export class PlayUIComponent implements OnInit {
       });
     }
   }
+
+  onVictoryDialogClose(): void {
+    setTimeout(() => {
+      this.matchActive = false;
+    }, 5000);
+  }
 }

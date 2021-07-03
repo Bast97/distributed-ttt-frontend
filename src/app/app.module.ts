@@ -14,6 +14,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { TestComponent } from './test/test/test.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { DialogVictoryComponent } from './play/components/dialog-victory/dialog-victory.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { HttpClientModule } from '@angular/common/http';
     PlayUIComponent,
     TTTFieldComponent,
     OverviewComponent,
-    TestComponent
+    TestComponent,
+    DialogVictoryComponent
   ],
   imports: [
     BrowserModule,
