@@ -12,8 +12,8 @@ export class PlayUIComponent implements OnInit {
   formInputURL: FormControl = new FormControl();
   formInputUID: FormControl = new FormControl();
   formInputPlayerX: FormControl = new FormControl(false);
-  formInputMatchMaker: FormControl = new FormControl();
-  formInputBaseSocketURL: FormControl = new FormControl();
+  formInputMatchMaker: FormControl = new FormControl('http://localhost:8080/newmatch');
+  formInputBaseSocketURL: FormControl = new FormControl('ws://localhost:8765/game');
   matchActive = false;
   playerColor = '';
   turn = false;
