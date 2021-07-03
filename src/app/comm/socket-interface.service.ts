@@ -59,6 +59,8 @@ export class SocketInterfaceService implements OnDestroy {
         case (ERROR):
           this.handlerError(msg);
           break;
+        default:
+          console.log('Could not resolve message type', msg.type);
       }
     });
   }
@@ -116,7 +118,7 @@ export class SocketInterfaceService implements OnDestroy {
       setTimeout(() => {
         console.log('Game finished. Closing connection ...');
         connection.complete();
-      }, 5000);
+      }, 4500);
     }
   }
   private handlerError(bean: WSBean): void {
