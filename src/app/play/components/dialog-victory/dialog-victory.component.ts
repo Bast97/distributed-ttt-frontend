@@ -28,6 +28,7 @@ export class DialogVictoryComponent implements OnInit {
   }
 
   closeDialog(): void {
+    console.log('Triggered dialog close');
     this.display = false;
     this.dialogClose.emit(0);
   }
