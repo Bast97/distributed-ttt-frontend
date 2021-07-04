@@ -52,11 +52,13 @@ export class PlayUIComponent implements OnInit {
     }
   }
 
-  onVictoryDialogClose(endstate: number): void {
+  onVictoryDialogClose(): void {
     console.log('Received dialog close event. Reseting match screen in 2 seconds ...');
     setTimeout(() => {
       console.log('Reseting ...');
       this.matchActive = false;
+      this.playerColor = '';
+      this.turn = false;
     }, 2000);
   }
 }
