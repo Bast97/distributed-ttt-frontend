@@ -118,7 +118,7 @@ export class SocketInterfaceService implements OnDestroy {
       setTimeout(() => {
         console.log('Game finished. Closing connection ...');
         connection.complete();
-      }, 4500);
+      }, 2000);
     }
   }
   private handlerError(bean: WSBean): void {

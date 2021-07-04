@@ -50,12 +50,16 @@ export interface WSError {
  * Data format that transmits game over information when a player wins the game
  */
 export interface WSGameOver {
-    victory: boolean;
-    tie: boolean;
+    winner: number;
 }
 
 export interface MatchResult {
     playerId: string;
     matchId: string;
     playerNum: number;
+}
+
+export interface IGameOver {
+    victory: boolean;
+    tie: boolean;
 }

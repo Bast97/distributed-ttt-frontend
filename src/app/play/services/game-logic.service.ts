@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { WSGameOver, WSGameState, WSMatchStart, WSTurn } from 'src/app/comm/beans';
+import { IGameOver, WSGameOver, WSGameState, WSMatchStart, WSTurn } from 'src/app/comm/beans';
 import { SocketInterfaceService } from 'src/app/comm/socket-interface.service';
 
 /**
@@ -16,6 +16,7 @@ export enum TTTCellState {
 export class GameLogicService {
   private subState: Subject<TTTCellState[]>;
   private subTurn: Subject<boolean>;
+  private subGameOver: Subject<IGameOver>;
 
   private playerColor: TTTCellState;
   private playerTurn = false;
@@ -36,6 +37,7 @@ export class GameLogicService {
     this.playerColor = TTTCellState.X;
     this.subState = new Subject<TTTCellState[]>();
     this.subTurn = new Subject<boolean>();
+    this.subGameOver = new Subject<IGameOver>();
 
     this.socket.getMatchStartObservable().subscribe(data => {
       this.handlerMatchStart(data);
@@ -104,6 +106,10 @@ export class GameLogicService {
     return this.subTurn.asObservable();
   }
 
+  getObservableGameOver(): Observable<IGameOver> {
+    return this.subGameOver.asObservable();
+  }
+
   private notifyStateChange(): void {
     this.subState.next([...this.gameState]);
   }
@@ -144,7 +150,12 @@ export class GameLogicService {
     if (data != undefined) {
       this.playerTurn = false;
       this.notifyTurnChange();
-      window.alert('Game over' + data.tie + data.victory); // TODO: Hier muss noch was ordentliches implementiert werden!
+
+      const gameOver = {
+        victory: this.playerColor === data.winner,
+        tie: data.winner === 0
+      };
+      this.subGameOver.next(gameOver);
     }
   }
 }

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { SocketInterfaceService } from 'src/app/comm/socket-interface.service';
+import { GameLogicService } from '../../services/game-logic.service';
 
 @Component({
   selector: 'app-dialog-victory',
@@ -13,10 +14,10 @@ export class DialogVictoryComponent implements OnInit {
 
   @Output() dialogClose: EventEmitter<any> = new EventEmitter();
 
-  constructor(private socket: SocketInterfaceService) { }
+  constructor(private gameLogic: GameLogicService) { }
 
   ngOnInit(): void {
-    this.socket.getMatchEndObservable().subscribe(data => {
+    this.gameLogic.getObservableGameOver().subscribe(data => {
       console.log('Received game over message. Opening game over dialog in 2 seconds');
       this.victory = data.victory;
       this.tie = data.tie;
