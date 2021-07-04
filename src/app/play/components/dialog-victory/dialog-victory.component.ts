@@ -17,9 +17,12 @@ export class DialogVictoryComponent implements OnInit {
 
   ngOnInit(): void {
     this.socket.getMatchEndObservable().subscribe(data => {
+      console.log('Received game over message. Opening game over dialog in 2 seconds');
       this.victory = data.victory;
       this.tie = data.tie;
-      this.display = true;
+      setTimeout(() => {
+        this.display = true;
+      }, 2000);
     });
   }
 
