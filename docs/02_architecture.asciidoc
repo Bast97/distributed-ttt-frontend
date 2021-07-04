@@ -17,22 +17,22 @@ The structure of this document is inspired by and partially copied from the cour
 [[tab:quality_attributes]]
 |===
 |Goal |Rating |Rationale
-|speed of development | 4 | the product needs to be in a workable state within a few months
-|inexpensiveness | 1 | money is not an issue because we only use free GCP options or coupons
-|size of scope | 2 | as development time is restricted the scope of our application must be rather small
+|speed of development | 4 | The product needs to be in a workable state within a few months
+|inexpensiveness | 1 | Money is not an issue because we only use free GCP options or coupons
+|size of scope | 2 | As development time is restricted the scope of our application must be rather small
 |response time | 2 | Tic Tac Toe is turn based so the quickest response time is not essential
-|throughput | 3 | our focus lies on being able to manage a large number of active games, but the games itself do not require a lot of bandwidth
-|capacity | 5 | our focus lies on being able to manage a large number of active games
-|scalability | 5 | our focus lies on being able to manage a large number of active games
-|availability | 2 | it's only a game (during peak hours it needs to be available, but downtime during the night is neglectable)
-|reliability | 3 | turns should end up in the actual match they were played in but if an input is lost it would not mean the end of the world
-|resilience | 4 | D3T should be able to handle extraordinary situations, meaning for example a burst of new players but also weird inputs like players joining and canceling games very quickly
-|consistency | 5 | consistency is key because you always want your state of the game to be exactly the one your opponent sees
-|operability | 4 | we want our application to be usable by a large audience
-|simplicity | 5 | we want our application to be usable by a large audience
-|modifiability | 3 | as we are already a group of multiple developers, modifiability is somewhat important to be able to work with other people's code. But as the project lifetime is limited, in a few months nobody will need to modify our code anymore.
-|security | 1 | we don't store any sensitive data and if anyone hacks at Tic Tac Toe he/she is a bad human being
-|usability | 4 | a game should be fun. An unusable game is not fun.
+|throughput | 3 | Our focus lies on being able to manage a large number of active games, but the games itself do not require a lot of bandwidth
+|capacity | 5 | Our focus lies on being able to manage a large number of active games
+|scalability | 5 | Our focus lies on being able to manage a large number of active games
+|availability | 2 | It's only a game (during peak hours it needs to be available, but downtime during the night is neglectable)
+|reliability | 3 | Turns should end up in the actual match they were played in but if an input is lost it would not mean the end of the world
+|resilience | 4 | Distributed Tic-Tac-Toe ("D3T") should be able to handle extraordinary situations, meaning for example a burst of new players but also weird inputs like players joining and canceling games very quickly
+|consistency | 5 | Consistency is key because you always want your state of the game to be exactly the one your opponent sees
+|operability | 4 | We want our application to be usable by a large audience
+|simplicity | 5 | We want our application to be usable by a large audience
+|modifiability | 3 | As we are already a group of multiple developers, modifiability is somewhat important to be able to work with other people's code. But as the project lifetime is limited, in a few months nobody will need to modify our code anymore.
+|security | 1 | We don't store any sensitive data and if anyone hacks at Tic Tac Toe he/she is a bad human being
+|usability | 4 | A game should be fun. An unusable game is not fun.
 |===
 
 [[sec:qas]]
