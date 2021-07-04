@@ -17,6 +17,7 @@ export class PlayUIComponent implements OnInit {
   matchActive = false;
   playerColor = '';
   turn = false;
+  gameOver = false;
 
   constructor(private gameLogic: GameLogicService, private matchmaker: MatchmakingService) {
   }
@@ -43,6 +44,7 @@ export class PlayUIComponent implements OnInit {
         next: data => {
           this.gameLogic.newMatch(this.formInputBaseSocketURL.value + '/' + data.matchId, data.playerId, data.playerNum);
           this.playerColor = data.playerNum === 1 ? 'X' : 'O';
+          this.gameOver = false;
           this.matchActive = true;
         },
         error: msg => {
@@ -53,12 +55,13 @@ export class PlayUIComponent implements OnInit {
   }
 
   onVictoryDialogClose(): void {
-    console.log('Received dialog close event. Reseting match screen in 2 seconds ...');
-    setTimeout(() => {
-      console.log('Reseting ...');
-      this.matchActive = false;
-      this.playerColor = '';
-      this.turn = false;
-    }, 2000);
+    this.gameOver = true;
+  }
+
+  onCloseMatch(): void {
+    this.playerColor = '';
+    this.turn = false;
+    this.gameOver = false;
+    this.matchActive = false;
   }
 }
