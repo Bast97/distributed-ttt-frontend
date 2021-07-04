@@ -49,7 +49,7 @@
             <div fxLayout="row" style="padding-top: 20px;">
                 Your color: {{playerColor}}
             </div>
-            <div fxLayout="row" fxLayoutAlign="center end" style="height: 85%;">
+            <div *ngIf="gameOver" fxLayout="row" fxLayoutAlign="center end" style="height: 85%;">
                 <button class="d3tbutton" (click)="onCloseMatch()">Close Match</button>
             </div>
         </div>
