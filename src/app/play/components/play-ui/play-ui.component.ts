@@ -54,7 +54,8 @@ export class PlayUIComponent implements OnInit {
 
   onVictoryDialogClose(): void {
     setTimeout(() => {
+      console.log('Reseting ...');
       this.matchActive = false;
-    }, 5000);
+    }, 2000);
   }
 }
