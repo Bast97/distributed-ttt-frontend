@@ -132,12 +132,13 @@ export class GameLogicService {
       console.log(this.gameState);
       this.notifyStateChange();
 
-      if(data.whoseTurn === this.playerColor) { // Dieser Vergleich muss eventuell überarbeitet werden!
+      if (data.whoseTurn === this.playerColor) { // Dieser Vergleich muss eventuell überarbeitet werden!
         this.playerTurn = true;
         this.notifyTurnChange();
       }
     }
   }
+
   private handlerMatchStart(data: WSMatchStart): void {
     if (data != undefined) {
       // Currently not in use!
@@ -146,6 +147,7 @@ export class GameLogicService {
       // this.notifyTurnChange();
     }
   }
+
   private handlerMatchEnd(data: WSGameOver): void {
     if (data != undefined) {
       this.playerTurn = false;
