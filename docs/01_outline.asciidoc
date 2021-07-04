@@ -1,0 +1,79 @@
+ifndef::imagesdir[]
+:imagesdir: ./images/
+endif::[]
+:data-uri:
+
+[[sec:outline]]
+= Outline
+
+[[sec:Purpose]]
+== Vision
+Our project will be a web application. The application will give users the opportunity to play a game of Tic-Tac-Toe against online opponents. For this goal, a user will be able to search for a match, either against a random opponent or against a friend by exchanging something like a match key. After a match is found, the players should be able to play Tic-Tac-Toe against each other. When the match ends the end result of the game should be written into a database for each player.
+
+Technically, the matches need a bi-directional connection to each player, so that the server can speak to a player without the player sending a prior request. For database requests (e.g. player information) an additional REST-interface may be required. 
+
+In the spirit of this lecture, the match instances will be separated into different parallel containers, depending on the number of matches or the CPU load of a single container. A matchmaker should be responsible for routing the players to the specific instances.
+
+As an addition to this load-splitting, there should be an overview page in the frontend where the different containers, current games and current load are displayed.
+
+To artificially increase the load on our system we will implement some sort of bots that can be spawned into the matchmaking system, get put into a match against each other by the matchmaker and then play Tic-Tac-Toe.
+
+[[sec:usecases]]
+== Use Cases
+Below is a use case diagram outlining the different use cases <<sec:Purpose,described above>>.
+
+image:use_case_diagram.png[]
+
+[[sec:interfaces]]
+== Interfaces
+
+image:Mock-Up1.png[]
+
+This is a mock-up of the index page with a welcome message. On opening the site, the user will see this view.
+
+image:Mock-Up2.png[]
+
+This is a mock-up of the playing field, reachable by the navigation bar. On opening this view, a dialog will pop up. The user will be able to queue themselves for match in the dialog.
+
+image:Mock-Up3.png[]
+
+This is a mock-up of the system monitor. This view will show the user the current load on the system. The exact data that will be shown is still to be determined.
+
+[[sec:technology]]
+== Technology
+
+=== Frontend
+
+[cols="1,1,1"]
+|===
+| TypeScript | Angular | WebSocket
+
+| TypeScript is a programming language that build upon the programming language JavaScript. In contrast to JavaScript, TypeScript has a type-safety feature. | Angular is a web-application framework that builds on the singlepage concept. Angular is based on TypeScript. Instead of directly manipulating the DOM, Angular uses a template engine. | To implement a game of Tic-Tac-Toe, a bi-directional, full-duplex connection between client and server is required, so that the server can send data to the client without the client sending a prior request.
+|===
+
+=== Backend 
+
+[cols="1,1,1,1,1"]
+|===
+| GCP | Docker | Kubernetes | Java | MySQL
+
+| Google Cloud Platform will be used as our cloud service provider. | The logic for a game of Tic-Tac-Toe should be run within a Docker container. If a new container should be spawned for each new game or if multiple games can run in one container is to be determined. | For load balancing reasons Kubernetes will be used to create and manage Docker containers depending on current demand. | Java is an object oriented programming language and will be used for our backend development. A WebSocket framework, a REST framework and a database framework may be needed. |  MySQL will act as the database management system to store the results of previous games and the associated players.
+|===
+
+
+[[sec:research]]
+== Focus Area and Research Question
+
+[[sec:research_description]]
+=== Description
+Our focus is on enabling the system to handle large concurrent loads. The user experience should not deteriorate when many other users are playing at the same time. For this the load will be distributed on many different nodes. Guided by two research questions we want to find the best way to do this.
+
+[[sec:research_question]]
+=== Research Question(s)
+1. Is there a measurable difference in performance and resource usage if multiple matches are played within one container instead of starting a new container for every match? If so, is there an optimal number of matches that can be served from one container?
+
+2. Is one centralised matchmaker enough to handle the load or can this be a bottle neck? If it can, what would be a possible solution?
+
+[[sec:approach]]
+=== Approach
+We want to challenge our system by developing a method to deploy many bots as players at the same time. Our matchmaking system will then have to handle all new requests, match two opponents and create a new game instance for them.

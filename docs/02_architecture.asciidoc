@@ -1,0 +1,216 @@
+ifndef::imagesdir[]
+:imagesdir: ./images
+endif::[]
+:data-uri:
+
+[[sec:architecture]]
+= Architecture
+The goal of this chapter is to describe your system's architecture as a "grey box". For example, it contains details about the system's internals down to the component level but not farther.
+
+The structure of this document is inspired by and partially copied from the courses "Software-Engineering" and "Software-Praktikum", which are taught in "Technische Informatik (Bachelor)" as well as by the arc42 template (https://arc42.org/) authored by Dr. Gernot Starke and Dr. Peter Hruschka.
+
+[[sec:architecturalgoals]]
+== Architectural Goals
+
+[cols="1,1,5a",options="header"]
+.Quality attributes
+[[tab:quality_attributes]]
+|===
+|Goal |Rating |Rationale
+|speed of development | 4 | the product needs to be in a workable state within a few months
+|inexpensiveness | 1 | money is not an issue because we only use free GCP options or coupons
+|size of scope | 2 | as development time is restricted the scope of our application must be rather small
+|response time | 2 | Tic Tac Toe is turn based so the quickest response time is not essential
+|throughput | 3 | our focus lies on being able to manage a large number of active games, but the games itself do not require a lot of bandwidth
+|capacity | 5 | our focus lies on being able to manage a large number of active games
+|scalability | 5 | our focus lies on being able to manage a large number of active games
+|availability | 2 | it's only a game (during peak hours it needs to be available, but downtime during the night is neglectable)
+|reliability | 3 | turns should end up in the actual match they were played in but if an input is lost it would not mean the end of the world
+|resilience | 4 | D3T should be able to handle extraordinary situations, meaning for example a burst of new players but also weird inputs like players joining and canceling games very quickly
+|consistency | 5 | consistency is key because you always want your state of the game to be exactly the one your opponent sees
+|operability | 4 | we want our application to be usable by a large audience
+|simplicity | 5 | we want our application to be usable by a large audience
+|modifiability | 3 | as we are already a group of multiple developers, modifiability is somewhat important to be able to work with other people's code. But as the project lifetime is limited, in a few months nobody will need to modify our code anymore.
+|security | 1 | we don't store any sensitive data and if anyone hacks at Tic Tac Toe he/she is a bad human being
+|usability | 4 | a game should be fun. An unusable game is not fun.
+|===
+
+[[sec:qas]]
+== Quality Attribute Scenarios
+
+When a Tic Tac Toe tournament takes place and hundreds of players join the matchmaking queue at the same time the system needs to be able to rapidly scale up the game servers so the waiting time is not longer than with just a few active players.
+
+A  minimalistic view of the game and necessary functions should be presented to the users. We will not add any advertisment banners or other distracting things to our frontend view.
+
+For any game, consistency is very important. Every move a player makes should be displayed to the opponent exactly. There should never be a state where the visualizations of the match for each player differ from each other. The decision that one player has won the game should always be correct according to the rules.
+
+We will not give special attention to making our game unhackable, but intend that our backend game logic implementation will be able to differentiate between legal and illegal user inputs and act accordingly. So if a player changes the JavaScript frontend code within his browser, he will not be able to get an advantage in the game.
+
+[[sec:constraints]]
+== Constraints
+
+[cols="1,1,5a",options="header"]
+.Constraints
+|===
+|Constraint |Category |Explanation and rationale
+| Google Cloud Platform | technical | We only have coupons for GCP so we will be using it. GCP's strengths and limits must be considered right from the start.
+| WebSocket | technical | Communication between clients and server(s) will happen via WebSockets. This has to be taken into consideration when planning the component layout. The number of WebSockets that a server can handle at the same time is limited.
+| remote work | organizational | Due to a current pandemic all work has to be done remotely.
+|===
+
+[[sec:stakeholder]]
+== Stakeholders
+
+[cols="1,1,5a",options="header"]
+.Stakeholders
+|===
+|Stakeholder group |Class |Responsibilities, interests and concerns
+| developers | promoters | Develop the game and the backend architecture.
+
+Quick development with many freedoms.
+
+A concern is that none of the developers has a lot of knowledge about distributed cloud application development.
+
+| players | defenders | Play games.
+
+Want to play games and have fun.
+
+If the game does not work out like they imagined they might just switch to another game.
+
+| support members | defenders | They offer support for players if any problem occured. 
+
+Ideally no problem occurs and the support members are happy.
+
+Concerns might be that due to them not being able to directly fix problems they might receive hate from players.
+
+| CEO | latents | Manage the whole company, Tic Tac Toe is just a small part of that.
+
+Maximizing profits.
+
+If the game Tic Tac Toe somehow generates bad press due to for example many bugs this might lead to the whole company being looked down upon.
+|===
+
+[[sec:scope]]
+== Scope and Context
+
+[cols="1,1,5a",options="header"]
+.Use Cases
+|===
+| Actor/system | use case | explanation 
+| Player | join matchmaking queue | join the matchmaking queue to get matched against a random opponent
+| Player | open private match | to play a game against a friend
+| Player | join private match | to join a game that a friend hosts
+| Developers | use our API | our game can not only be played via our GUI but also using an API. Other developers might use this to create for example a Discord bot to play Tic Tac Toe on our system
+| Game websites | embed our game | websites like spieleaffe.de can embed our game into their site
+|===
+
+
+[[sec:designdecisions]]
+== Key Design Decisions
+
+[cols="1,1,5a",options="header"]
+.Key Design Decisions
+|===
+|Decision |Category |Explanation and rationale
+| RESTful web API | technology | A RESTful API will be used for first contact between the matchmaker and any client. Only little information needs to be transfered here and not for a longer period of time, so something like WebSockets was not chosen for this task.
+
+| WebSockets | technology | For every game there will be WebSocket connections between the game server and both clients. WebSockets was chosen because we need a continuous, bi-directional flow of data here.
+
+| Docker | quality goal | Our goal is to offer a distributed Tic Tac Toe service that can handle high user loads. To fulfill that goal, Docker containers will be used.
+
+| Kubernetes | technology | Kubernetes helps us with handling and scaling the Docker containers.
+
+| Java | technology | Java is very popular. Implementations of WebSockets are ready to use and usage within Docker containers is fully supported.
+
+| No Go | technology | None of us have a lot of experience with the language of Go, so we quickly got rid of the early idea to use Go as our backend programming language.
+
+| Split matchmaker from games | architectural | We assume that the main bottleneck will be the actual games. While the matchmaker will only run as one process, the scalability of D3T lies in spawning many containers serving games.
+
+| encapsulate turn based logic | organizational | We as a company decided to separate the abstract logic of a turn-based game and the actual implementation of Tic Tac Toe. This is because in the future we might want to develop other turn-based games and can then re-use the existing logic.
+|===
+
+[[sec:deployment]]
+== Deployment View
+
+image:d3t-deployment.png[]
+
+[cols="1,2",options="header"]
+
+|===
+|Component(s) |Explanation
+|client (1)| clients connect to our service via their browser
+|load balancer (2) | to balance the load if many players want to play at the same time, we use Kubernetes to automatically scale up our game services which run in containers
+|application server (3)| the logic of both the matchmaker and the actual games runs in Docker containers
+|Redis database (4)| to ensure consistency of data during a match, each turn is stored in a Redis database
+|DB server (5)| results of each match get sent to a server to store it in a database
+|database (6)| the match results get stored in an instance of GCP’s "Cloud SQL" using the MySQL-option
+|===
+
+[[sec:components]]
+== Software Component View
+
+
+As seen in the following figure, the components of D3T can be split into four layers.
+
+The frontend differentiates between player views and views for an administrator.
+
+For a player to join and play a match a communication layer is needed, because the actual game gets played in one of many containers. For receiving a match ID the player sends a request to a RESTful API. Once received, a WebSocket connection is put in place to have a bi-directional way of communication to the game logic.
+
+As mentioned in the previous paragraph, the logic is split into a matchmaker and the game logic. Additionally the component MatchStatistics is responsible for providing statistics about match results.
+
+The match results are stored in a database from the game logic after a match has finished. The match statistics logic can then read the results from the same database. During a game, each turn is also stored in a Redis database to ensure consistency.
+
+image:d3t-components.png[]
+
+
+[[sec:dataschema]]
+== Data Schema View
+
+[[fig:dataschema]]
+image:data_schema.png[]
+
+<<fig:dataschema,The figure above>> depicts the data schema of D3T. After each match the match ID, the player names and the winner get stored. This can then be used to create match statistics.
+
+[[sec:runtime]]
+== Runtime View
+
+Three use cases:
+
+1. Find a match against a random opponent
+** player1 sends request to RESTful API
+** request gets sent to matchmaker
+** matchmaker adds player1 to matchmaking queue
+** matchmaker looks if any other player is currently in the matchmaking queue
+** if not, repeat until there is another player in the matchmaking queue
+** if yes, send both players the key to their match
+** player1 receives match key as response view RESTful API
+
+2. Create a private match to play against a friend
+** player2 sends request to RESTful API
+** request gets sent to matchmaker
+** matchmaker creates a new match and sends back match key
+** player2 receives match key as response view RESTful API
+** player2's friend must now enter the match key to join the match
+
+3. Look at statistics about all matches
+** admin1 sends request to view statistics about all matches
+** the match statistics logic selects all matches and calculates for example, how much the win percentages varies depending on if a player has the first or the second move
+** statistics get sent to admin1
+
+[[sec:crosscutting]]
+== Crosscutting Concepts
+
+This chapter describes important aspect of the architecture which cannot be accommodated in the preceding chapters.
+
+[cols="1,1,5a",options="header"]
+|===
+|Crosscutting +
+concept |Category |Explanation and rationale
+|scalability|operation concepts| The current load on D3T will be measured by CPU and RAM usage. Once one of them surpasses 80%, new containers must be spawned.
+
+|source code repository |development |D3T's source code is versioned in a single Git repository hosted on the Gitlab instance of Prof. Woerzberger.
+
+|bot implementation|operation concepts| D3T will be playable by bots via an API, not only with the GUI. This is needed to create massive load on the system and answer our Forschungsfrage.
+
+
+|===

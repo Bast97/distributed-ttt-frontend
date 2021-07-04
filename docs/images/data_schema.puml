@@ -1,0 +1,10 @@
+@startuml Data Schema
+
+class MatchResults {
+    id: int
+    match_id: string
+    player1: string
+    player2: string
+    winner: int
+}
+@enduml

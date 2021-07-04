@@ -1,0 +1,24 @@
+ifndef::imagesdir[]
+:imagesdir: ./images
+endif::[]
+
+:sectnums:
+:toc: macro
+:data-uri:
+
+= Distributed Tic-Tac-Toe
+
+[horizontal]
+Team:: 07
+Members::
+* Henrik Erpenbach (herpenba, henrik.erpenbach@smail.th-koeln.de)
+* Jonas Fender (jfender, jonas.fender@smail.th-koeln.de)
+* Johannes Hirth (jhirth, johannes.hirth@smail.th-koeln.de)
+* Bastian Schetter (bschette, bastian.schetter@smail.th-koeln.de)
+
+version from:: {localdate}, {localtime}
+
+toc::[title=Table of Contents,levels=4]
+
+include::01_outline.asciidoc[leveloffset=+1]
+include::02_architecture.asciidoc[leveloffset=+1]

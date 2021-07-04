@@ -1,0 +1,26 @@
+@startuml ttt_usecase
+skinparam actorStyle awesome
+(go into matchmaking queue) as matchmaking
+(open private match) as host
+(join private match) as privatematch
+(play a game of Tic-Tac-Toe) as play
+(look at statistics of a player) as stats
+(monitor active games/load) as monitor
+
+
+
+"User" as user
+"Bot" as bot
+
+
+
+matchmaking --> play
+host --> play
+privatematch --> play
+user --> host
+user --> privatematch
+bot --> matchmaking
+user --> matchmaking
+user ..> stats
+user ..> monitor
+@enduml
