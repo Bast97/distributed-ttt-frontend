@@ -14,10 +14,6 @@ const routes: Routes = [
     component: OverviewComponent,
   },
   {
-    path: 'test',
-    component: TestComponent,
-  },
-  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'play'
