@@ -1,12 +1,12 @@
 <div id="playParent">
     <div id="preMatchContainer" fxLayoutAlign="center center" *ngIf="!matchActive">
         <div fxLayout="column" fxLayoutGap="8px">
-            <div fxLayout="row">
+            <div fxLayout="row" fxLayoutAlign="start center">
                 <label style="min-width: 50px;">IP:</label>
-                <input type="text" style="min-width: 400px;" [formControl]="formInputIP"/>
+                <input type="text" style="min-width: 400px; height: 32px;" [formControl]="formInputIP"/>
             </div>
             <div fxLayout="row">
-                <button (click)="clickPlay()" style="width: 100%;">Play</button>
+                <button class="d3tbutton" (click)="clickPlay()" style="width: 100%;">Play</button>
             </div>
         </div>
     </div>
