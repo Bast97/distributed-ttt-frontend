@@ -9,11 +9,7 @@ import { GameLogicService } from 'src/app/play/services/game-logic.service';
   styleUrls: ['./play-ui.component.scss']
 })
 export class PlayUIComponent implements OnInit {
-  formInputURL: FormControl = new FormControl();
-  formInputUID: FormControl = new FormControl();
-  formInputPlayerX: FormControl = new FormControl(false);
-  formInputMatchMaker: FormControl = new FormControl('http://localhost:8080/newmatch');
-  formInputBaseSocketURL: FormControl = new FormControl('ws://localhost:8765/game');
+  formInputIP: FormControl = new FormControl('34.149.46.105');
   matchActive = false;
   playerColor = '';
   turn = false;
@@ -28,21 +24,14 @@ export class PlayUIComponent implements OnInit {
     });
   }
 
-  clickDirectConnect(): void {
-    if (this.formInputURL.value && this.formInputUID.value?.length > 0 && this.formInputPlayerX.value != undefined) {
-      console.log(this.formInputURL.value);
-      this.playerColor = this.formInputPlayerX.value ? 'X' : 'O';
-      this.matchActive = true;
-      this.gameLogic.newMatch(this.formInputURL.value, this.formInputUID.value, this.formInputPlayerX.value ? 1 : 2);
-    }
-  }
-
-  clickMatchMaker(): void {
-    if (this.formInputMatchMaker.value && this.formInputBaseSocketURL.value) {
-      console.log('Requesting match from', this.formInputMatchMaker.value);
-      this.matchmaker.getMatch(this.formInputMatchMaker.value).subscribe({
+  clickPlay(): void {
+    if (this.formInputIP.value) {
+      let matchmakerURL = 'http://' + this.formInputIP.value + '/newmatch';
+      let websocketURL = 'ws://' + this.formInputIP.value + '/game';
+      console.log('Requesting match from', matchmakerURL);
+      this.matchmaker.getMatch(matchmakerURL).subscribe({
         next: data => {
-          this.gameLogic.newMatch(this.formInputBaseSocketURL.value + '/' + data.matchId, data.playerId, data.playerNum);
+          this.gameLogic.newMatch(websocketURL + '/' + data.matchId, data.playerId, data.playerNum);
           this.playerColor = data.playerNum === 1 ? 'X' : 'O';
           this.gameOver = false;
           this.matchActive = true;
