@@ -15,11 +15,14 @@
     </div>
     <div id="controlContainer" fxLayoutAlign="center" *ngIf="matchActive">
         <div id="controlElementsBox" fxLayout="column" fxLayoutGap="20px;">
-            <div fxLayout="row" *ngIf="turn && !gameOver" style="color: green;">
+            <div fxLayout="row" *ngIf="matchStarted && turn && !gameOver" style="color: green;">
                 It's your turn!
             </div>
-            <div fxLayout="row" *ngIf="!turn && !gameOver" style="color: red;">
+            <div fxLayout="row" *ngIf="matchStarted && !turn && !gameOver" style="color: red;">
                 Please wait for your turn!
+            </div>
+            <div fxLayout="row" *ngIf="!matchStarted && !turn && !gameOver">
+                Please wait for another player to join
             </div>
             <div fxLayout="row" *ngIf="gameOver">
                 Game Over
