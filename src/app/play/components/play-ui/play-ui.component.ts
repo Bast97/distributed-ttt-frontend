@@ -9,8 +9,9 @@ import { GameLogicService } from 'src/app/play/services/game-logic.service';
   styleUrls: ['./play-ui.component.scss']
 })
 export class PlayUIComponent implements OnInit {
-  formInputIP: FormControl = new FormControl('34.149.46.105');
+  formInputIP: FormControl = new FormControl('tictac.toelpel.ch');
   matchActive = false;
+  matchStarted = false;
   playerColor = '';
   turn = false;
   gameOver = false;
@@ -20,14 +21,17 @@ export class PlayUIComponent implements OnInit {
 
   ngOnInit(): void {
     this.gameLogic.getObservableTurn().subscribe( t => {
+      if (!this.matchStarted) {
+        this.matchStarted = true;
+      }
       this.turn = t;
     });
   }
 
   clickPlay(): void {
     if (this.formInputIP.value) {
-      let matchmakerURL = 'http://' + this.formInputIP.value + '/newmatch';
-      let websocketURL = 'ws://' + this.formInputIP.value + '/game';
+      const matchmakerURL = 'http://' + this.formInputIP.value + '/newmatch';
+      const websocketURL = 'ws://' + this.formInputIP.value + '/game';
       console.log('Requesting match from', matchmakerURL);
       this.matchmaker.getMatch(matchmakerURL).subscribe({
         next: data => {
@@ -52,5 +56,6 @@ export class PlayUIComponent implements OnInit {
     this.turn = false;
     this.gameOver = false;
     this.matchActive = false;
+    this.matchStarted = false;
   }
 }
