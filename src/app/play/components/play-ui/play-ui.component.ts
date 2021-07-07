@@ -30,8 +30,8 @@ export class PlayUIComponent implements OnInit {
 
   clickPlay(): void {
     if (this.formInputIP.value) {
-      const matchmakerURL = 'http://' + this.formInputIP.value + '/newmatch';
-      const websocketURL = 'ws://' + this.formInputIP.value + '/game';
+      const matchmakerURL = 'https://' + this.formInputIP.value + '/newmatch';
+      const websocketURL = 'wss://' + this.formInputIP.value + '/game';
       console.log('Requesting match from', matchmakerURL);
       this.matchmaker.getMatch(matchmakerURL).subscribe({
         next: data => {
